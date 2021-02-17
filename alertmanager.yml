@@ -1,0 +1,48 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 300s
+  repeat_interval: 1h
+
+  routes:
+    - match: {severity: p1}
+      receiver: 'slack-p1-notifications'
+      continue: true
+
+    - match: {severity: p2}
+      receiver: 'slack-p2-notifications'
+      continue: true
+
+  receiver: 'slack-p1-notifications'
+
+  - name: 'slack-p1-notifications'
+    slack_configs:
+    - channel: '${P1_SLACK_CHANNEL}'
+      api_url: '${P1_SLACK_HOOK}'
+      title: '{{- template "slack.notifications.title" . -}}'
+      text: '{{- template "slack.notifications.text" . -}}'
+      send_resolved: true
+      actions:
+        - type: 'button'
+          text: 'Hello :wave:'
+          url: '{{ template "slack.notifications.silence" . }}'
+          value: '{{ template "slack.notifications.silence" . }}'
+
+  - name: 'slack-p2-notifications'
+    slack_configs:
+    - channel: '${P2_SLACK_CHANNEL}'
+      api_url: '${P2_SLACK_HOOK}'
+      title: '{{- template "slack.notifications.title" . -}}'
+      text: '{{- template "slack.notifications.text" . -}}'
+      send_resolved: true
+      actions:
+        - type: 'button'
+          text: 'Hello :wave:'
+          url: '{{ template "slack.notifications.silence" . }}'
+          value: '{{ template "slack.notifications.silence" . }}'
+      
+templates: 
+  - ${APP_ROOT}/notifications.tmpl

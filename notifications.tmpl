@@ -1,0 +1,46 @@
+{{ define "__title_prefix" -}}
+    {{- if ne .Status "firing" -}}
+    :lgtm:
+    {{- else if eq .CommonLabels.severity "p1" -}}
+    P1 -
+    {{- else if eq .CommonLabels.severity "p2" -}}
+    P2 -
+    {{- else -}}
+    Unknown - 
+    {{- end }}
+{{- end }}
+
+
+{{ define "slack.notifications.title" }}
+    [{{ .Status | toUpper -}} 
+     {{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{- end -}}
+    ] {{ template "__title_prefix" . }} {{ .CommonLabels.alertname}}
+{{ end }}
+
+{{ define "slack.notifications.link_button_text" -}}
+    {{- if .CommonAnnotations.link_text -}}
+        {{- .CommonAnnotations.link_text -}}
+    {{- else -}}
+        Link
+    {{- end }} :link:
+{{- end }}
+
+{{ define "slack.notifications.silence"  }}
+    "Hello"
+{{ end }}
+
+{{ define "slack.notifications.text" }}
+    {{- range .Alerts -}}
+    *{{ .Annotations.description }}*
+
+        • organisation: `{{ .Labels.organisation }}`
+        • space: `{{ .Labels.space }}`
+        {{- if .Labels.app }}
+        • app: `{{ .Labels.app }}`
+        • instance: `{{ .Labels.exported_instance }}`
+        {{- else if .Labels.service }}
+        • service: `{{ .Labels.service }}`
+        {{ end }}
+        
+    {{ end }}
+{{ end }}

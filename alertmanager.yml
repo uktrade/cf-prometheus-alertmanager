@@ -9,16 +9,17 @@ route:
 
   routes:
     - match: {severity: p1}
-      receiver: 'slack-p1-notifications'
+      receiver: 'p1-notifications'
       continue: true
 
     - match: {severity: p2}
-      receiver: 'slack-p2-notifications'
+      receiver: 'p2-notifications'
       continue: true
 
-  receiver: 'slack-p1-notifications'
+  receiver: 'p1-notifications'
 
-  - name: 'slack-p1-notifications'
+receivers:
+  - name: 'p1-notifications'
     slack_configs:
     - channel: '${P1_SLACK_CHANNEL}'
       api_url: '${P1_SLACK_HOOK}'
@@ -31,7 +32,14 @@ route:
           url: '{{ template "slack.notifications.silence" . }}'
           value: '{{ template "slack.notifications.silence" . }}'
 
-  - name: 'slack-p2-notifications'
+    pagerduty_configs:
+      - routing_key: '${ROUTING_KEY}'
+        severity: 'critical'
+        client: '{{ template "pd.notifications.client" }}'
+        description: 'critical db disk space on {{ template "pd.notifications.description" }}'
+        
+
+  - name: 'p2-notifications'
     slack_configs:
     - channel: '${P2_SLACK_CHANNEL}'
       api_url: '${P2_SLACK_HOOK}'
@@ -45,4 +53,5 @@ route:
           value: '{{ template "slack.notifications.silence" . }}'
       
 templates: 
-  - ${APP_ROOT}/notifications.tmpl
+  - ${APP_ROOT}/templates/slack.tmpl
+  - ${APP_ROOT}/templates/pagerduty.tmpl

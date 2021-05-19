@@ -18,6 +18,7 @@ route:
 
   receiver: 'slack-p1-notifications'
 
+receivers:
   - name: 'slack-p1-notifications'
     slack_configs:
     - channel: '${P1_SLACK_CHANNEL}'

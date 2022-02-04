@@ -1,0 +1,7 @@
+{{ define "pd.notifications.client" }}
+AlertManager
+{{ end }}
+
+{{ define "pd.notifications.description" }}
+   {{ range .Alerts }} {{ .Labels.service }} {{ end }} 
+{{ end }}

@@ -1,0 +1,14 @@
+version: '3.3'
+
+services:
+  alertmanager:
+    image: cloudfoundry/cflinuxfs3
+    container_name: alertmanager
+    ports: 
+      - ${PORT}:${PORT}
+    env_file:
+      - .env
+    volumes: 
+      - ${PWD}:${APP_ROOT}
+    
+    command: ${APP_ROOT}/helper/runContainer.sh

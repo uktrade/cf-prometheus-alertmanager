@@ -1,4 +1,4 @@
 ---
 applications:
   - buildpacks:
-    - https://github.com/uktrade/prometheus-alertmanager-buildpack.git
+    - https://github.com/uktrade/prometheus-alertmanager-buildpack.git#dev

@@ -1,4 +1,7 @@
 ---
 applications:
-  - buildpacks:
-    - https://github.com/uktrade/prometheus-alertmanager-buildpack.git
+  - name: cf-prometheus-alertmanager
+    buildpacks:
+      - https://github.com/uktrade/prometheus-alertmanager-buildpack.git
+    stack: cflinuxfs4
+
